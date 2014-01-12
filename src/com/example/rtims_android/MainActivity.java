@@ -10,6 +10,12 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 public class MainActivity extends FragmentActivity {
 	
 	private Button mLayersButton;
@@ -20,13 +26,29 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		
+		// Get a handle to the Map Fragment
+        GoogleMap map = ((MapFragment) getFragmentManager()
+                .findFragmentById(R.id.map)).getMap();
+
+        LatLng centerMap = new LatLng(14.1876, 121.12508);
+
+        map.setMyLocationEnabled(true);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerMap, 13));
+
+        map.addMarker(new MarkerOptions()
+                .title("Sydney")
+                .snippet("The most populous city in Australia.")
+                .position(centerMap));
+        
+        
+        
 		mLayersButton = (Button)findViewById(R.id.layers_button);
 		mLayersButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
 				AlertDialog.Builder builderSingle = new AlertDialog.Builder(MainActivity.this);
-	            builderSingle.setIcon(R.drawable.ic_launcher);
 	            builderSingle.setTitle("Layers");
 	            
 	            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.select_dialog_item);
@@ -87,7 +109,7 @@ public class MainActivity extends FragmentActivity {
 	        	            
 	        	            builderInner2.setAdapter(arrayAdapter2, null);
 	        	            
-	                        builderInner2.setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+	        	            builderInner2.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
 	
 	                                    @Override
 	                                    public void onClick(DialogInterface dialog,int which) {
@@ -118,7 +140,7 @@ public class MainActivity extends FragmentActivity {
 	        	            
 	        	            builderInner2.setAdapter(arrayAdapter2, null);
 	        	            
-	                        builderInner2.setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+	                        builderInner2.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
 	
 	                                    @Override
 	                                    public void onClick(DialogInterface dialog,int which) {
