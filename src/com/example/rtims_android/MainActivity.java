@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -43,8 +44,10 @@ public class MainActivity extends FragmentActivity {
 	private Button mLayersButton;
 	final Context context = this;
 	private String jsonResult, jsonResult2;
-	private String url = "http://192.168.1.102/RTIMS/roadwork.php";
-	private String url2 = "http://192.168.1.102/RTIMS/incident.php";
+	private String url = "http://192.168.1.111/RTIMS/roadwork.php";
+	private String url2 = "http://192.168.1.111/RTIMS/incident.php";
+	//private String url = "http://sample1206.comeze.com/roadwork.php";
+	//private String url2 = "http://sample1206.comeze.com/incident.php";
 	private GoogleMap map;
 	private LatLng centerMap;
 	
@@ -153,7 +156,7 @@ public class MainActivity extends FragmentActivity {
                         else if(strName.equals("Roadworks")){
 	                        AlertDialog.Builder builderInner2 = new AlertDialog.Builder(MainActivity.this);
 	                        builderInner2.setTitle("Roadworks");
-	                        builderInner2.setIcon(R.drawable.construction);
+	                        builderInner2.setIcon(R.drawable.construction_menu);
 	                        
 	                        final ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(MainActivity.this, android.R.layout.select_dialog_item);
 	        	            arrayAdapter2.add("All Roadworks");
@@ -331,8 +334,8 @@ public class MainActivity extends FragmentActivity {
 	            .snippet(inc_desc)
 	            .position(coords));
 			    
-			    incidentMarkers.add(marker);
-			    categorizeMarker(marker, inc_type);
+			    
+			    categorizeINCMarker(marker, inc_type);
 			 }
 		 
 		 private void createRWMarker(JSONObject jsonChildNode){
@@ -354,29 +357,82 @@ public class MainActivity extends FragmentActivity {
             .title(rwork_name)
             .snippet(rwork_type)
             .position(coords));
-		    
-		    roadworkMarkers.add(marker);
-		    categorizeMarker(marker, rwork_type);
+            
+		    categorizeRWMarker(marker, rwork_type);
 		 }
 		 
-		 private void categorizeMarker(Marker marker, String categ){
-			 if(categ.equalsIgnoreCase("Construction"))  			rw_cat1.add(marker);
-			 else if(categ.equalsIgnoreCase("Rehabilitation"))  	rw_cat2.add(marker);
-			 else if(categ.equalsIgnoreCase("Renovation"))  		rw_cat3.add(marker);
-			 else if(categ.equalsIgnoreCase("Riprapping"))  		rw_cat4.add(marker);
-			 else if(categ.equalsIgnoreCase("Application"))  		rw_cat5.add(marker);
-			 else if(categ.equalsIgnoreCase("Installation"))  		rw_cat6.add(marker);
-			 else if(categ.equalsIgnoreCase("Reconstruction"))  	rw_cat7.add(marker);
-			 else if(categ.equalsIgnoreCase("Concreting"))  		rw_cat8.add(marker);
-			 else if(categ.equalsIgnoreCase("Electrification"))  	rw_cat9.add(marker);
-			 else if(categ.equalsIgnoreCase("Roadway Lighting"))	rw_cat10.add(marker);
+		 private void categorizeRWMarker(Marker marker, String categ){
+			 if(categ.equalsIgnoreCase("Construction")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.construction));
+				 rw_cat1.add(marker);
+			 }
+			 else if(categ.equalsIgnoreCase("Rehabilitation")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.rehabilitation));
+				 rw_cat2.add(marker);
+			 }
+			 else if(categ.equalsIgnoreCase("Renovation")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.renovation));
+				 rw_cat3.add(marker);
+			 }
+			 else if(categ.equalsIgnoreCase("Riprapping")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.riprapping));
+				 rw_cat4.add(marker);
+			 }
+			 else if(categ.equalsIgnoreCase("Application")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.application));
+				 rw_cat5.add(marker);
+			 }
+			 else if(categ.equalsIgnoreCase("Installation")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.installation));
+				 rw_cat6.add(marker);
+			 }
+			 else if(categ.equalsIgnoreCase("Reconstruction")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.reconstruction));
+				 rw_cat7.add(marker);
+			 }
+			 else if(categ.equalsIgnoreCase("Concreting")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.concreting));
+				 rw_cat8.add(marker);
+			 }
+			 else if(categ.equalsIgnoreCase("Electrification")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.electrification));
+				 rw_cat9.add(marker);
+			 }
+			 else if(categ.equalsIgnoreCase("Roadway Lighting")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.roadwaylighting));
+				 rw_cat10.add(marker);
+			 }
 			 
-			 else if(categ.equalsIgnoreCase("Accident"))  			inc_cat1.add(marker);
-			 else if(categ.equalsIgnoreCase("Obstruction"))  		inc_cat2.add(marker);
-			 else if(categ.equalsIgnoreCase("Public Event"))  		inc_cat3.add(marker);
-			 else if(categ.equalsIgnoreCase("Funeral"))  			inc_cat4.add(marker);
-			 else if(categ.equalsIgnoreCase("Flood"))  				inc_cat5.add(marker);
-			 else if(categ.equalsIgnoreCase("Strike"))  			inc_cat6.add(marker);
+			 roadworkMarkers.add(marker);
+		 }
+		 
+		 private void categorizeINCMarker(Marker marker, String categ){
+			 if(categ.equalsIgnoreCase("Accident")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.accident));
+				 inc_cat1.add(marker);
+			 }
+			 else if(categ.equalsIgnoreCase("Obstruction")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.obstruction));
+				 inc_cat2.add(marker);
+			 }
+			 else if(categ.equalsIgnoreCase("Public Event")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.publicevent));
+				 inc_cat3.add(marker);
+			 }
+			 else if(categ.equalsIgnoreCase("Funeral")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.funeral));
+				 inc_cat4.add(marker);
+			 }
+			 else if(categ.equalsIgnoreCase("Flood")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.flood));
+				 inc_cat5.add(marker);
+			 }
+			 else if(categ.equalsIgnoreCase("Strike")){
+				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.strike));
+				 inc_cat6.add(marker);
+			 }
+			 
+			 incidentMarkers.add(marker);
 		 }
 		 
 		 public boolean isNetworkAvailable() {
