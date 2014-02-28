@@ -29,7 +29,8 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-       android:theme="@android:style/Theme.Holo">
+       	android:theme="@android:style/Theme.Holo"
+       	android:installLocation="preferExternal">
         <activity
             android:name="com.example.rtims_android.MainActivity"
             android:label="@string/app_name" >

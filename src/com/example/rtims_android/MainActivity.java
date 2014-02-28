@@ -44,32 +44,47 @@ public class MainActivity extends FragmentActivity {
 	private Button mLayersButton;
 	final Context context = this;
 	private String jsonResult, jsonResult2;
-	private String url = "http://192.168.1.111/RTIMS/roadwork.php";
-	private String url2 = "http://192.168.1.111/RTIMS/incident.php";
-	//private String url = "http://sample1206.comeze.com/roadwork.php";
-	//private String url2 = "http://sample1206.comeze.com/incident.php";
+	//private String url = "http://192.168.1.103/RTIMS/roadwork.php";
+	//private String url2 = "http://192.168.1.103/RTIMS/incident.php";
+	private String url = "http://sample1206.comeze.com/roadwork.php";
+	private String url2 = "http://sample1206.comeze.com/incident.php";
 	private GoogleMap map;
 	private LatLng centerMap;
 	
-	private List<Marker> roadworkMarkers = new ArrayList<Marker>();	
-	private List<Marker> rw_cat1 = new ArrayList<Marker>();
-	private List<Marker> rw_cat2 = new ArrayList<Marker>();
-	private List<Marker> rw_cat3 = new ArrayList<Marker>();
-	private List<Marker> rw_cat4 = new ArrayList<Marker>();
-	private List<Marker> rw_cat5 = new ArrayList<Marker>();
-	private List<Marker> rw_cat6 = new ArrayList<Marker>();
-	private List<Marker> rw_cat7 = new ArrayList<Marker>();
-	private List<Marker> rw_cat8 = new ArrayList<Marker>();
-	private List<Marker> rw_cat9 = new ArrayList<Marker>();
-	private List<Marker> rw_cat10 = new ArrayList<Marker>();
+	private MarkerList mMarkerList; 
+	private List<RTIMSMarker> roadworkMarkers = new ArrayList<RTIMSMarker>();	
+	//private List<RTIMSMarker> incidentMarkers = new ArrayList<RTIMSMarker>();
 	
-	private List<Marker> incidentMarkers = new ArrayList<Marker>();
-	private List<Marker> inc_cat1 = new ArrayList<Marker>();
-	private List<Marker> inc_cat2 = new ArrayList<Marker>();
-	private List<Marker> inc_cat3 = new ArrayList<Marker>();
-	private List<Marker> inc_cat4 = new ArrayList<Marker>();
-	private List<Marker> inc_cat5 = new ArrayList<Marker>();
-	private List<Marker> inc_cat6 = new ArrayList<Marker>();
+	private final int MAX_ROADWORK_ITEM = 10;
+	private final int MAX_INCIDENT_ITEM = 7;
+	
+	boolean[] itemsChecked_rw, itemsChecked_inc;
+	
+	boolean[] displayedRW = new boolean[MAX_ROADWORK_ITEM];
+	boolean[] displayedINC = new boolean[MAX_INCIDENT_ITEM];
+	
+	final CharSequence[] categ_rw={"construction", "rehabilitation", "renovation", "riprapping", "application", "installation", "reconstruction", "concreting", "electrification", "roadway lighting"};
+	
+	final CharSequence[] categ_inc={"accident", "obstruction", "public event", "riprapping", "funeral", "flood", "strike"};
+	
+	final CharSequence[] items_rw={"Construction",
+									"Rehabilitation",
+									"Renovation",
+									"Riprapping",
+									"Application",
+									"Installation",
+									"Reconstruction",
+									"Concreting/Asphalting",
+									"Electrification",
+									"Roadway Lighting"};
+
+	final CharSequence[] items_inc={"Accident",
+									"Obstruction",
+									"Public Event",
+									"Riprapping",
+									"Funeral",
+									"Flood",
+									"Strike"};
 	
 	
 	
@@ -84,6 +99,7 @@ public class MainActivity extends FragmentActivity {
 			Toast.makeText(this, "No Internet Connection. Please check your network settings", Toast.LENGTH_LONG).show();
 		}
 		
+		mMarkerList = MarkerList.getInstance();
 		
 		// Get a handle to the Map Fragment
         map = ((MapFragment) getFragmentManager()
@@ -127,9 +143,9 @@ public class MainActivity extends FragmentActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     	//loop
-                    	for(int i=0; i<roadworkMarkers.size(); i++){
-                    		roadworkMarkers.get(i).setVisible(false);
-                    	}
+                    	/*for(int i=0; i<roadworkMarkers.size(); i++){
+                    		roadworkMarkers.get(i).getMarker().setVisible(false);
+                    	}*/
                         dialog.dismiss();
                     }
                 }); //end setNeutral
@@ -146,72 +162,13 @@ public class MainActivity extends FragmentActivity {
                         
                         if(strName.equals("Calamba City")){
 	                        //centers the map
-                        	
                             map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerMap, 13));
-                        }
-                        
-                        /*----------------------------------------------------------------------------------*
-                         *									ROADWORKS MENU 									*
-                         *----------------------------------------------------------------------------------*/
-                        else if(strName.equals("Roadworks")){
-	                        AlertDialog.Builder builderInner2 = new AlertDialog.Builder(MainActivity.this);
-	                        builderInner2.setTitle("Roadworks");
-	                        builderInner2.setIcon(R.drawable.construction_menu);
-	                        
-	                        final ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(MainActivity.this, android.R.layout.select_dialog_item);
-	        	            arrayAdapter2.add("All Roadworks");
-	        	            arrayAdapter2.add("Construction");
-	        	            arrayAdapter2.add("Rehabilitation");
-	        	            arrayAdapter2.add("Renovation");
-	        	            arrayAdapter2.add("Riprapping");
-	        	            arrayAdapter2.add("Application");
-	        	            arrayAdapter2.add("Installation");
-	        	            arrayAdapter2.add("Reconstruction");
-	        	            arrayAdapter2.add("Concreting/Asphalting");
-	        	            arrayAdapter2.add("Electrification");
-	        	            arrayAdapter2.add("Roadway Lighting");
-	        	            
-	        	            builderInner2.setAdapter(arrayAdapter2, null);
-	        	            
-	        	            builderInner2.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-	
-	                                    @Override
-	                                    public void onClick(DialogInterface dialog,int which) {
-	                                        dialog.dismiss();
-	                                    }
-	                                });
-	                        builderInner2.show();
-                        }
-                        
-                        /*----------------------------------------------------------------------------------*
-                         *									INCIDENTS MENU 									*
-                         *----------------------------------------------------------------------------------*/
-                        
-                        else if(strName.equals("Traffic Incidents")){
-	                        AlertDialog.Builder builderInner2 = new AlertDialog.Builder(MainActivity.this);
-	                        builderInner2.setTitle("Traffic Incidents");
-	                        builderInner2.setIcon(R.drawable.stop);
-	                        
-	                        final ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(MainActivity.this, android.R.layout.select_dialog_item);
-	        	            arrayAdapter2.add("All Incidents");
-	        	            arrayAdapter2.add("Accident");
-	        	            arrayAdapter2.add("Obstruction");
-	        	            arrayAdapter2.add("Public Event");
-	        	            arrayAdapter2.add("Riprapping");
-	        	            arrayAdapter2.add("Funeral");
-	        	            arrayAdapter2.add("Flood");
-	        	            arrayAdapter2.add("Strike");
-	        	            
-	        	            builderInner2.setAdapter(arrayAdapter2, null);
-	        	            
-	                        builderInner2.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-	
-	                                    @Override
-	                                    public void onClick(DialogInterface dialog,int which) {
-	                                        dialog.dismiss();
-	                                    }
-	                                });
-	                        builderInner2.show();
+                            
+                        }else if(strName.equals("Roadworks")){
+                        	showRoadworkDialog();
+                        	
+                        }else if(strName.equals("Traffic Incidents")){
+	                        showIncidentDialog();
                         }
                     }
                 });
@@ -225,6 +182,106 @@ public class MainActivity extends FragmentActivity {
 		
 	}
 
+	
+	/*----------------------------------------------------------------------------------*
+     *									ROADWORKS MENU 									*
+     *----------------------------------------------------------------------------------*/
+	public void showRoadworkDialog(){
+						
+		itemsChecked_rw = new boolean[MAX_ROADWORK_ITEM];
+		
+    	for(int i=0; i <MAX_ROADWORK_ITEM; i++){
+    		itemsChecked_rw[i] = displayedRW[i];
+    	}
+    	
+    	AlertDialog.Builder builder=new AlertDialog.Builder(this);
+    	builder.setTitle("Roadworks");
+    	builder.setIcon(R.drawable.construction_menu);
+    	builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            	
+                for (int i = 0; i < MAX_ROADWORK_ITEM; i++) {
+                	List<RTIMSMarker> temp = mMarkerList.getListInCategory(categ_rw[i].toString());
+                	
+	                if (itemsChecked_rw[i]) {
+	                    Log.d("Tin","item selected:"+categ_rw[i].toString());          		
+	                	for(int j=0; j<temp.size(); j++){
+	                		temp.get(j).getMarker().setVisible(true);
+                    	}
+	                                	
+	                	
+	                }else if (!itemsChecked_rw[i]) {
+	                	Log.d("Tin","item not selected: "+categ_rw[i].toString());
+	                	for(int j=0; j<temp.size(); j++){
+	                		temp.get(j).getMarker().setVisible(false);
+                    	}
+	                }	
+                }
+                
+            }
+        });
+    	
+    	builder.setMultiChoiceItems(items_rw, displayedRW, new DialogInterface.OnMultiChoiceClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+					itemsChecked_rw[which]=isChecked;	
+			}
+		});
+    	builder.show();
+    }
+	
+	/*----------------------------------------------------------------------------------*
+     *									INCIDENTS MENU 									*
+     *----------------------------------------------------------------------------------*/
+    
+	public void showIncidentDialog(){
+			
+		itemsChecked_inc = new boolean[MAX_INCIDENT_ITEM];
+
+    	for(int i=0; i <MAX_INCIDENT_ITEM; i++){
+    		itemsChecked_inc[i] = displayedINC[i];
+    	}
+    	
+    	AlertDialog.Builder builder=new AlertDialog.Builder(this);
+    	builder.setTitle("Traffic Incidents");
+    	builder.setIcon(R.drawable.stop);
+    	builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            	for (int i = 0; i < MAX_INCIDENT_ITEM; i++) {
+                	List<RTIMSMarker> temp = mMarkerList.getListInCategory(categ_inc[i].toString());
+                	
+	                if (itemsChecked_inc[i]) {
+	                    Log.d("Tin","item selected:"+categ_inc[i].toString());          		
+	                	for(int j=0; j<temp.size(); j++){
+	                		temp.get(j).getMarker().setVisible(true);
+                    	}
+	                                	
+	                	
+	                }else if (!itemsChecked_inc[i]) {
+	                	Log.d("Tin","item not selected: "+categ_inc[i].toString());
+	                	for(int j=0; j<temp.size(); j++){
+	                		temp.get(j).getMarker().setVisible(false);
+                    	}
+	                }	
+                }
+            }
+        });
+    	
+    	builder.setMultiChoiceItems(items_inc, displayedINC, new DialogInterface.OnMultiChoiceClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+					itemsChecked_inc[which]=isChecked;	
+			}
+		});
+    	builder.show();
+    }
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -321,12 +378,12 @@ public class MainActivity extends FragmentActivity {
 				String inc_id = jsonChildNode.optString("inc_id");
 			    String inc_type = jsonChildNode.optString("inc_type");
 			    String inc_desc = jsonChildNode.optString("description");
-			    String inc_start = jsonChildNode.optString("start_date");
+			    /*String inc_start = jsonChildNode.optString("start_date");
 			    String inc_end = jsonChildNode.optString("end_date");
+			    String inc_street = jsonChildNode.optString("street");
+			    String inc_barangay = jsonChildNode.optString("barangay");*/
 			    String inc_lat = jsonChildNode.optString("latitude");
 			    String inc_long = jsonChildNode.optString("longitude");
-			    String inc_street = jsonChildNode.optString("street");
-			    String inc_barangay = jsonChildNode.optString("barangay");
 			    
 			    LatLng coords = new LatLng(Double.parseDouble(inc_lat), Double.parseDouble(inc_long));
 			    Marker marker = map.addMarker(new MarkerOptions()
@@ -342,15 +399,15 @@ public class MainActivity extends FragmentActivity {
 			String rwork_no = jsonChildNode.optString("contract_no");
 		    String rwork_name = jsonChildNode.optString("rwork_name");
 		    String rwork_type = jsonChildNode.optString("rwork_type");
-		    String rwork_desc = jsonChildNode.optString("description");
+		    /*String rwork_desc = jsonChildNode.optString("description");
 		    String rwork_start = jsonChildNode.optString("start_date");
 		    String rwork_end = jsonChildNode.optString("end_date");
-		    String rwork_status = jsonChildNode.optString("status");
+		    String rwork_status = jsonChildNode.optString("status"); 
+		    String rwork_street = jsonChildNode.optString("street");
+		    String rwork_barangay = jsonChildNode.optString("barangay");*/
 		    String rwork_lat = jsonChildNode.optString("latitude");
 		    String rwork_long = jsonChildNode.optString("longitude");
-		    String rwork_street = jsonChildNode.optString("street");
-		    String rwork_barangay = jsonChildNode.optString("barangay");
-		    String outPut = rwork_no + " "  + rwork_name + " " + rwork_lat+","+rwork_long;
+		    //String outPut = rwork_no + " "  + rwork_name + " " + rwork_lat+","+rwork_long;
 		    
 		    LatLng coords = new LatLng(Double.parseDouble(rwork_lat), Double.parseDouble(rwork_long));
 		    Marker marker = map.addMarker(new MarkerOptions()
@@ -362,77 +419,82 @@ public class MainActivity extends FragmentActivity {
 		 }
 		 
 		 private void categorizeRWMarker(Marker marker, String categ){
+			 RTIMSMarker rMarker;
+			 
 			 if(categ.equalsIgnoreCase("Construction")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.construction));
-				 rw_cat1.add(marker);
+				 displayedRW[0] = true;
 			 }
 			 else if(categ.equalsIgnoreCase("Rehabilitation")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.rehabilitation));
-				 rw_cat2.add(marker);
+				 displayedRW[1] = true;
 			 }
 			 else if(categ.equalsIgnoreCase("Renovation")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.renovation));
-				 rw_cat3.add(marker);
+				 displayedRW[2] = true;
 			 }
 			 else if(categ.equalsIgnoreCase("Riprapping")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.riprapping));
-				 rw_cat4.add(marker);
+				 displayedRW[3] = true;
 			 }
 			 else if(categ.equalsIgnoreCase("Application")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.application));
-				 rw_cat5.add(marker);
+				 displayedRW[4] = true;
 			 }
 			 else if(categ.equalsIgnoreCase("Installation")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.installation));
-				 rw_cat6.add(marker);
+				 displayedRW[5] = true;
 			 }
 			 else if(categ.equalsIgnoreCase("Reconstruction")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.reconstruction));
-				 rw_cat7.add(marker);
+				 displayedRW[6] = true;
 			 }
 			 else if(categ.equalsIgnoreCase("Concreting")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.concreting));
-				 rw_cat8.add(marker);
+				 displayedRW[7] = true;
 			 }
 			 else if(categ.equalsIgnoreCase("Electrification")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.electrification));
-				 rw_cat9.add(marker);
+				 displayedRW[8] = true;
 			 }
 			 else if(categ.equalsIgnoreCase("Roadway Lighting")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.roadwaylighting));
-				 rw_cat10.add(marker);
+				 displayedRW[9] = true;
 			 }
-			 
-			 roadworkMarkers.add(marker);
+			 rMarker = new RTIMSMarker(marker, categ, "roadwork");
+			 mMarkerList.add(rMarker);
 		 }
 		 
 		 private void categorizeINCMarker(Marker marker, String categ){
+			 RTIMSMarker iMarker;
+			 
 			 if(categ.equalsIgnoreCase("Accident")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.accident));
-				 inc_cat1.add(marker);
+				 displayedINC[0] = true;
 			 }
 			 else if(categ.equalsIgnoreCase("Obstruction")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.obstruction));
-				 inc_cat2.add(marker);
+				 displayedINC[1] = true;
 			 }
 			 else if(categ.equalsIgnoreCase("Public Event")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.publicevent));
-				 inc_cat3.add(marker);
+				 displayedINC[2] = true;
 			 }
 			 else if(categ.equalsIgnoreCase("Funeral")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.funeral));
-				 inc_cat4.add(marker);
+				 displayedINC[3] = true;
 			 }
 			 else if(categ.equalsIgnoreCase("Flood")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.flood));
-				 inc_cat5.add(marker);
+				 displayedINC[4] = true;
 			 }
 			 else if(categ.equalsIgnoreCase("Strike")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.strike));
-				 inc_cat6.add(marker);
+				 displayedINC[5] = true;
 			 }
 			 
-			 incidentMarkers.add(marker);
+			 iMarker = new RTIMSMarker(marker, categ, "incident");
+			 mMarkerList.add(iMarker);
 		 }
 		 
 		 public boolean isNetworkAvailable() {
