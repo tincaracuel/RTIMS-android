@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -33,6 +34,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -110,10 +112,16 @@ public class MainActivity extends FragmentActivity {
         map.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerMap, 13));
 
-        /*map.addMarker(new MarkerOptions()
-                .title("Sydney")
-                .snippet("The most populous city in Australia.")
-                .position(centerMap));*/
+
+        map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+               Intent intent = new Intent(MainActivity.this,MarkerActivity.class);
+               startActivity(intent);
+
+
+            }
+        });
         
         
         
@@ -129,6 +137,7 @@ public class MainActivity extends FragmentActivity {
 	            arrayAdapter.add("Calamba City");
 	            arrayAdapter.add("Roadworks");
 	            arrayAdapter.add("Traffic Incidents");
+	            arrayAdapter.add("New Activity");
 	            
 	            
 	            builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -169,6 +178,10 @@ public class MainActivity extends FragmentActivity {
                         	
                         }else if(strName.equals("Traffic Incidents")){
 	                        showIncidentDialog();
+	                        
+                        }else if(strName.equals("New Activity")){
+                        	Intent i2 = new Intent(MainActivity.this,MarkerActivity.class);
+                            startActivity(i2);
                         }
                     }
                 });
@@ -461,6 +474,7 @@ public class MainActivity extends FragmentActivity {
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.roadwaylighting));
 				 displayedRW[9] = true;
 			 }
+			 
 			 rMarker = new RTIMSMarker(marker, categ, "roadwork");
 			 mMarkerList.add(rMarker);
 		 }
