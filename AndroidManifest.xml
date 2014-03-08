@@ -51,6 +51,10 @@
             android:name="com.example.rtims_android.MarkerActivity"
             android:label="@string/title_activity_marker" >
         </activity>
+        <activity
+            android:name="com.example.rtims_android.ReportActivity"
+            android:label="@string/title_activity_report" >
+        </activity>
     </application>
 
 </manifest>

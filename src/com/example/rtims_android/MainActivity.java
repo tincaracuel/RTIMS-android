@@ -46,8 +46,8 @@ public class MainActivity extends FragmentActivity {
 	private Button mLayersButton;
 	final Context context = this;
 	private String jsonResult, jsonResult2;
-	//private String url = "http://192.168.1.103/RTIMS/roadwork.php";
-	//private String url2 = "http://192.168.1.103/RTIMS/incident.php";
+	//private String url = "http://192.168.1.109/RTIMS/roadwork.php";
+	//private String url2 = "http://192.168.1.109/RTIMS/incident.php";
 	private String url = "http://sample1206.comeze.com/roadwork.php";
 	private String url2 = "http://sample1206.comeze.com/incident.php";
 	private GoogleMap map;
@@ -116,9 +116,10 @@ public class MainActivity extends FragmentActivity {
         map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-               Intent intent = new Intent(MainActivity.this,MarkerActivity.class);
-               startActivity(intent);
-
+            	findMarkerClicked(marker);
+            	//Intent intent = new Intent(MainActivity.this,MarkerActivity.class);
+            	//startActivity(intent);
+               
 
             }
         });
@@ -137,7 +138,7 @@ public class MainActivity extends FragmentActivity {
 	            arrayAdapter.add("Calamba City");
 	            arrayAdapter.add("Roadworks");
 	            arrayAdapter.add("Traffic Incidents");
-	            arrayAdapter.add("New Activity");
+	            arrayAdapter.add("Submit Report");
 	            
 	            
 	            builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -179,9 +180,44 @@ public class MainActivity extends FragmentActivity {
                         }else if(strName.equals("Traffic Incidents")){
 	                        showIncidentDialog();
 	                        
-                        }else if(strName.equals("New Activity")){
-                        	Intent i2 = new Intent(MainActivity.this,MarkerActivity.class);
-                            startActivity(i2);
+                        }else if(strName.equals("Submit Report")){
+							AlertDialog.Builder builderInner2 = new AlertDialog.Builder(MainActivity.this);
+							builderInner2.setTitle("Report on...");
+							final ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(MainActivity.this, android.R.layout.select_dialog_item);
+							arrayAdapter2.add("Existing Roadwork");
+							arrayAdapter2.add("Existing Incident");
+							arrayAdapter2.add("Others");
+							
+							builderInner2.setAdapter(arrayAdapter2, new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog,int which) {
+								String whichReport = arrayAdapter2.getItem(which);
+								int opt = 0;
+								
+								Log.d("Tin", whichReport);
+								
+								if(whichReport.equals("Existing Roadwork")){
+									Intent in = new Intent(MainActivity.this,ReportActivity.class);
+									in.putExtra(MarkerActivity.EXTRA_INDEX, 1);
+									startActivity(in);
+								}else if(whichReport.equals("Existing Roadwork")){
+									Intent in = new Intent(MainActivity.this,ReportActivity.class);
+									in.putExtra(MarkerActivity.EXTRA_INDEX, 2);
+									startActivity(in);
+								}else if(whichReport.equals("Others")){
+									Intent in = new Intent(MainActivity.this,ReportActivity.class);
+									in.putExtra(MarkerActivity.EXTRA_INDEX, 3);
+									startActivity(in);
+								}
+								
+								/*Intent in = new Intent(MainActivity.this,ReportActivity.class);
+								in.putExtra(MarkerActivity.EXTRA_INDEX, opt);
+								startActivity(in);*/
+							}
+							});
+							builderInner2.show();
+
                         }
                     }
                 });
@@ -195,6 +231,24 @@ public class MainActivity extends FragmentActivity {
 		
 	}
 
+	// find marker clicked from marker list
+	private void findMarkerClicked(Marker marker) {
+		Log.d("Tin", "findMarkerClicked");
+		for(int i = 0; i < mMarkerList.getList().size(); i++) {
+			Log.d("Tin", mMarkerList.getList().get(i).getMarker().getId() + " " + marker.getId());
+			if(mMarkerList.getList().get(i).getMarker().getId().equals(marker.getId())) {
+				Log.d("Tin", "marker found by id");
+				openDetailsActivity(i);
+				break;
+			}
+		}
+	}
+	
+	private void openDetailsActivity(int index) {
+		Intent i = new Intent(MainActivity.this,MarkerActivity.class);
+		i.putExtra(MarkerActivity.EXTRA_INDEX, index);
+		startActivity(i);
+	}
 	
 	/*----------------------------------------------------------------------------------*
      *									ROADWORKS MENU 									*
@@ -388,39 +442,45 @@ public class MainActivity extends FragmentActivity {
 		 }
 		 
 		 private void createINCMarker(JSONObject jsonChildNode){
-				String inc_id = jsonChildNode.optString("inc_id");
-			    String inc_type = jsonChildNode.optString("inc_type");
-			    String inc_desc = jsonChildNode.optString("description");
-			    /*String inc_start = jsonChildNode.optString("start_date");
-			    String inc_end = jsonChildNode.optString("end_date");
-			    String inc_street = jsonChildNode.optString("street");
-			    String inc_barangay = jsonChildNode.optString("barangay");*/
-			    String inc_lat = jsonChildNode.optString("latitude");
-			    String inc_long = jsonChildNode.optString("longitude");
-			    
-			    LatLng coords = new LatLng(Double.parseDouble(inc_lat), Double.parseDouble(inc_long));
-			    Marker marker = map.addMarker(new MarkerOptions()
-	            .title(inc_desc)
-	            .snippet(inc_desc)
-	            .position(coords));
-			    
-			    
-			    categorizeINCMarker(marker, inc_type);
-			 }
+			 RTIMSMarker iMarker; 
+			 
+			 String inc_id = jsonChildNode.optString("inc_id");
+			 String inc_type = jsonChildNode.optString("inc_type");
+			 String inc_desc = jsonChildNode.optString("description");
+			 String inc_start = jsonChildNode.optString("start_date");
+			 String inc_end = jsonChildNode.optString("end_date");
+			 String inc_street = jsonChildNode.optString("street");
+			 String inc_barangay = jsonChildNode.optString("barangay");
+			 String inc_lat = jsonChildNode.optString("latitude");
+			 String inc_long = jsonChildNode.optString("longitude");
+
+		    LatLng coords = new LatLng(Double.parseDouble(inc_lat), Double.parseDouble(inc_long));
+		    Marker marker = map.addMarker(new MarkerOptions()
+            .title(inc_id + ": " + inc_type)
+            .snippet(inc_desc)
+            .position(coords));
+		    
+		    categorizeINCMarker(marker, inc_type);
+		    
+		    iMarker = new RTIMSMarker(marker, inc_type, "incident", inc_id, inc_desc,
+		    						inc_start, inc_end, inc_street, inc_barangay, inc_lat, inc_long);
+			mMarkerList.add(iMarker);
+		 }
 		 
 		 private void createRWMarker(JSONObject jsonChildNode){
+			RTIMSMarker rMarker;
+			 
 			String rwork_no = jsonChildNode.optString("contract_no");
 		    String rwork_name = jsonChildNode.optString("rwork_name");
 		    String rwork_type = jsonChildNode.optString("rwork_type");
-		    /*String rwork_desc = jsonChildNode.optString("description");
+		    String rwork_desc = jsonChildNode.optString("description");
 		    String rwork_start = jsonChildNode.optString("start_date");
 		    String rwork_end = jsonChildNode.optString("end_date");
 		    String rwork_status = jsonChildNode.optString("status"); 
 		    String rwork_street = jsonChildNode.optString("street");
-		    String rwork_barangay = jsonChildNode.optString("barangay");*/
+		    String rwork_barangay = jsonChildNode.optString("barangay");
 		    String rwork_lat = jsonChildNode.optString("latitude");
 		    String rwork_long = jsonChildNode.optString("longitude");
-		    //String outPut = rwork_no + " "  + rwork_name + " " + rwork_lat+","+rwork_long;
 		    
 		    LatLng coords = new LatLng(Double.parseDouble(rwork_lat), Double.parseDouble(rwork_long));
 		    Marker marker = map.addMarker(new MarkerOptions()
@@ -429,11 +489,15 @@ public class MainActivity extends FragmentActivity {
             .position(coords));
             
 		    categorizeRWMarker(marker, rwork_type);
+		    
+		    rMarker = new RTIMSMarker(marker, rwork_type, "roadwork", rwork_no, rwork_name, rwork_desc,
+		    						rwork_start, rwork_end, rwork_status, rwork_street, rwork_barangay,
+		    						rwork_lat, rwork_long);
+			 mMarkerList.add(rMarker);
 		 }
 		 
 		 private void categorizeRWMarker(Marker marker, String categ){
-			 RTIMSMarker rMarker;
-			 
+					 
 			 if(categ.equalsIgnoreCase("Construction")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.construction));
 				 displayedRW[0] = true;
@@ -475,12 +539,10 @@ public class MainActivity extends FragmentActivity {
 				 displayedRW[9] = true;
 			 }
 			 
-			 rMarker = new RTIMSMarker(marker, categ, "roadwork");
-			 mMarkerList.add(rMarker);
 		 }
 		 
 		 private void categorizeINCMarker(Marker marker, String categ){
-			 RTIMSMarker iMarker;
+			 
 			 
 			 if(categ.equalsIgnoreCase("Accident")){
 				 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.accident));
@@ -507,8 +569,7 @@ public class MainActivity extends FragmentActivity {
 				 displayedINC[5] = true;
 			 }
 			 
-			 iMarker = new RTIMSMarker(marker, categ, "incident");
-			 mMarkerList.add(iMarker);
+			
 		 }
 		 
 		 public boolean isNetworkAvailable() {
