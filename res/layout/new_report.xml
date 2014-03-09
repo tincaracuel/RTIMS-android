@@ -1,0 +1,82 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ScrollView01"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical">
+
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".ReportActivity" >
+
+    <TextView
+        android:id="@+id/report_header"
+        android:layout_width="wrap_content"
+        android:textColor="#33b5e5"
+        android:textSize="16sp"
+        android:layout_height="wrap_content"
+        android:text="@string/reportheader" />
+    
+    <View
+	    android:layout_width="fill_parent"	    
+	    android:layout_height="1dip"
+	    android:background="#33b5e5" />
+     
+    <EditText
+	    android:id="@+id/EditTextName"
+	    android:layout_height="wrap_content"
+	    android:paddingTop="14sp"
+	    android:hint="@string/hintname"
+	    android:inputType="textPersonName"
+	    android:layout_width="fill_parent">
+	</EditText>
+	
+    <EditText
+	    android:id="@+id/EditTextEmail"
+	    android:layout_height="wrap_content"
+	    android:paddingTop="14sp"
+	    android:hint="@string/hintemail"
+	    android:inputType="textEmailAddress"
+	    android:layout_width="fill_parent">
+	</EditText>
+	
+    <EditText
+	    android:id="@+id/EditSubject"
+	    android:layout_height="wrap_content"
+	    android:paddingTop="14sp"
+	    android:hint="@string/reportsubject"
+	    android:inputType="text"
+	    android:layout_width="fill_parent">
+	</EditText>
+	
+
+    <EditText
+	    android:id="@+id/EditTextReportBody"
+	    android:layout_height="wrap_content"
+	    android:paddingTop="14sp"
+	    android:paddingBottom="10sp"
+	    android:hint="@string/hintbodyandlocation"
+	    android:inputType="textMultiLine"
+	    android:lines="5"
+	    android:layout_width="fill_parent">
+	</EditText>
+	
+    <Button
+	    android:id="@+id/ButtonSendReport"
+	    android:layout_height="wrap_content"
+	    android:text="@string/submitbutton"
+	    android:onClick="sendReport"
+	    android:layout_width="fill_parent">
+	</Button>
+    
+
+</LinearLayout>
+
+
+</ScrollView>

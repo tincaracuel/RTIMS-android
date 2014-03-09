@@ -5,7 +5,14 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="layers_button">Layers</string>
-    <string name="title_activity_marker">Roadworks Monitoring System</string>
-    <string name="title_activity_report">ReportActivity</string>
+    
+    <string name="reportheader">Submit new report</string>
+    <string name="hintname">Name</string>
+    <string name="hintemail">Email Address</string>
+    <string name="reportprompt">Report on…</string>
+    <string name="reportsubject">Report subject</string>
+    <string name="hintreportbody">Report details</string>
+    <string name="hintbodyandlocation">Report and location details</string>
+    <string name="submitbutton">Send Report</string>
 
 </resources>

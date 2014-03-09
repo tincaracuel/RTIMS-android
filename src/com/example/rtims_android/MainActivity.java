@@ -46,10 +46,10 @@ public class MainActivity extends FragmentActivity {
 	private Button mLayersButton;
 	final Context context = this;
 	private String jsonResult, jsonResult2;
-	//private String url = "http://192.168.1.109/RTIMS/roadwork.php";
-	//private String url2 = "http://192.168.1.109/RTIMS/incident.php";
-	private String url = "http://sample1206.comeze.com/roadwork.php";
-	private String url2 = "http://sample1206.comeze.com/incident.php";
+	private String url = "http://192.168.0.100/RTIMS/roadwork.php";
+	private String url2 = "http://192.168.0.100/RTIMS/incident.php";
+	//private String url = "http://sample1206.comeze.com/roadwork.php";
+	//private String url2 = "http://sample1206.comeze.com/incident.php";
 	private GoogleMap map;
 	private LatLng centerMap;
 	
@@ -117,10 +117,6 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onInfoWindowClick(Marker marker) {
             	findMarkerClicked(marker);
-            	//Intent intent = new Intent(MainActivity.this,MarkerActivity.class);
-            	//startActivity(intent);
-               
-
             }
         });
         
@@ -181,43 +177,46 @@ public class MainActivity extends FragmentActivity {
 	                        showIncidentDialog();
 	                        
                         }else if(strName.equals("Submit Report")){
-							AlertDialog.Builder builderInner2 = new AlertDialog.Builder(MainActivity.this);
-							builderInner2.setTitle("Report on...");
-							final ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(MainActivity.this, android.R.layout.select_dialog_item);
-							arrayAdapter2.add("Existing Roadwork");
-							arrayAdapter2.add("Existing Incident");
-							arrayAdapter2.add("Others");
-							
-							builderInner2.setAdapter(arrayAdapter2, new DialogInterface.OnClickListener() {
-							
-							@Override
-							public void onClick(DialogInterface dialog,int which) {
-								String whichReport = arrayAdapter2.getItem(which);
-								int opt = 0;
-								
-								Log.d("Tin", whichReport);
-								
-								if(whichReport.equals("Existing Roadwork")){
-									Intent in = new Intent(MainActivity.this,ReportActivity.class);
-									in.putExtra(MarkerActivity.EXTRA_INDEX, 1);
-									startActivity(in);
-								}else if(whichReport.equals("Existing Roadwork")){
-									Intent in = new Intent(MainActivity.this,ReportActivity.class);
-									in.putExtra(MarkerActivity.EXTRA_INDEX, 2);
-									startActivity(in);
-								}else if(whichReport.equals("Others")){
-									Intent in = new Intent(MainActivity.this,ReportActivity.class);
-									in.putExtra(MarkerActivity.EXTRA_INDEX, 3);
-									startActivity(in);
-								}
-								
-								/*Intent in = new Intent(MainActivity.this,ReportActivity.class);
-								in.putExtra(MarkerActivity.EXTRA_INDEX, opt);
-								startActivity(in);*/
-							}
-							});
-							builderInner2.show();
+                        	
+                        	//must have an internet connection before you can submit a report
+                        	if(isNetworkAvailable()){
+                        		AlertDialog.Builder builderInner2 = new AlertDialog.Builder(MainActivity.this);
+    							builderInner2.setTitle("Report on...");
+    							final ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(MainActivity.this, android.R.layout.select_dialog_item);
+    							arrayAdapter2.add("Existing Roadwork");
+    							arrayAdapter2.add("Existing Incident");
+    							arrayAdapter2.add("Others");
+    							
+    							builderInner2.setAdapter(arrayAdapter2, new DialogInterface.OnClickListener() {
+    							
+    							@Override
+    							public void onClick(DialogInterface dialog,int which) {
+    								String whichReport = arrayAdapter2.getItem(which);
+    								
+    								Log.d("Tin", whichReport);
+    								
+    								if(whichReport.equals("Existing Roadwork")){
+    									int opt = 1;
+    									openReportsActivity(opt);
+    								}else if(whichReport.equals("Existing Incident")){
+    									int opt = 2;
+    									openReportsActivity(opt);
+    								}else if(whichReport.equals("Others")){
+    									int opt = 3;
+    									openReportsActivity(opt);
+    								}else{
+    									int opt = 0;
+    									openReportsActivity(opt);
+    								}
+    							}
+    							});
+    							builderInner2.show();
 
+                    		}else{
+                    			
+                    			Toast.makeText(MainActivity.this, "No Internet Connection. Please check your network settings", Toast.LENGTH_LONG).show();
+                    		}
+							
                         }
                     }
                 });
@@ -247,6 +246,12 @@ public class MainActivity extends FragmentActivity {
 	private void openDetailsActivity(int index) {
 		Intent i = new Intent(MainActivity.this,MarkerActivity.class);
 		i.putExtra(MarkerActivity.EXTRA_INDEX, index);
+		startActivity(i);
+	}
+	
+	private void openReportsActivity(int opt) {
+		Intent i = new Intent(MainActivity.this,ReportActivity.class);
+		i.putExtra(ReportActivity.EXTRA_OPT, opt);
 		startActivity(i);
 	}
 	
