@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -46,16 +45,14 @@ public class MainActivity extends FragmentActivity {
 	private Button mLayersButton;
 	final Context context = this;
 	private String jsonResult, jsonResult2;
-	private String url = "http://192.168.0.100/RTIMS/roadwork.php";
-	private String url2 = "http://192.168.0.100/RTIMS/incident.php";
+	private String url = "http://10.0.246.255/RTIMS/roadwork.php";
+	private String url2 = "http://10.0.246.255/RTIMS/incident.php";
 	//private String url = "http://sample1206.comeze.com/roadwork.php";
 	//private String url2 = "http://sample1206.comeze.com/incident.php";
 	private GoogleMap map;
 	private LatLng centerMap;
 	
 	private MarkerList mMarkerList; 
-	private List<RTIMSMarker> roadworkMarkers = new ArrayList<RTIMSMarker>();	
-	//private List<RTIMSMarker> incidentMarkers = new ArrayList<RTIMSMarker>();
 	
 	private final int MAX_ROADWORK_ITEM = 10;
 	private final int MAX_INCIDENT_ITEM = 7;
@@ -128,7 +125,7 @@ public class MainActivity extends FragmentActivity {
 			public void onClick(View v) {
 
 				AlertDialog.Builder builderSingle = new AlertDialog.Builder(MainActivity.this);
-	            builderSingle.setTitle("Layers");
+	            builderSingle.setTitle("RTIMS");
 	            
 	            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.select_dialog_item);
 	            arrayAdapter.add("Calamba City");
@@ -144,19 +141,7 @@ public class MainActivity extends FragmentActivity {
                     }
                 }); //end setNegative
 	            
-	            
-	            builderSingle.setNeutralButton("Clear Map", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    	//loop
-                    	/*for(int i=0; i<roadworkMarkers.size(); i++){
-                    		roadworkMarkers.get(i).getMarker().setVisible(false);
-                    	}*/
-                        dialog.dismiss();
-                    }
-                }); //end setNeutral
-
-	            
+	                        
 	            builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

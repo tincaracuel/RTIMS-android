@@ -1,7 +1,5 @@
 package com.example.rtims_android;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;

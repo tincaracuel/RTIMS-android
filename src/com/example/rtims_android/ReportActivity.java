@@ -12,10 +12,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,10 +26,9 @@ import android.widget.TextView;
 public class ReportActivity extends Activity {
 
 	public final static String EXTRA_OPT = "opt";
-	private static String url_roadwork_report = "http://192.168.0.100/RTIMS/insert_roadwork_report.php";
-	private static String url_incident_report = "http://192.168.0.100/RTIMS/insert_incident_report.php";
-	private static String url_other_report = "http://192.168.0.100/RTIMS/insert_other_report.php";
-	private static final String TAG_SUCCESS = "success";
+	private static String url_roadwork_report = "http://10.0.246.255/RTIMS/insert_roadwork_report.php";
+	private static String url_incident_report = "http://10.0.246.255/RTIMS/insert_incident_report.php";
+	private static String url_other_report = "http://10.0.246.255/RTIMS/insert_other_report.php";
 	private Button mSubmitButton;
 	private ProgressDialog pDialog;
 	private EditText nameField, emailField, descriptionField, subjectField;
