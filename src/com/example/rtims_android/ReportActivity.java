@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -14,6 +13,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,9 +26,9 @@ import android.widget.TextView;
 public class ReportActivity extends Activity {
 
 	public final static String EXTRA_OPT = "opt";
-	private static String url_roadwork_report = "http://10.0.246.255/RTIMS/insert_roadwork_report.php";
-	private static String url_incident_report = "http://10.0.246.255/RTIMS/insert_incident_report.php";
-	private static String url_other_report = "http://10.0.246.255/RTIMS/insert_other_report.php";
+	private static String url_roadwork_report = MainActivity.ipadd + "RTIMS/insert_roadwork_report.php";
+	private static String url_incident_report = MainActivity.ipadd + "RTIMS/insert_incident_report.php";
+	private static String url_other_report = MainActivity.ipadd + "RTIMS/insert_other_report.php";
 	private Button mSubmitButton;
 	private ProgressDialog pDialog;
 	private EditText nameField, emailField, descriptionField, subjectField;
@@ -36,6 +36,7 @@ public class ReportActivity extends Activity {
 	JSONParser jsonParser = new JSONParser();
 	private int opt;
 
+	public ArrayList<Integer> roadworkIndexes = new ArrayList<Integer>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +155,8 @@ public class ReportActivity extends Activity {
 	}
 	
 	private void openReportRoadworkLayout(){
-	
+
+		Log.d("tin", "asafwfwefw");
 		TextView t = (TextView)findViewById(R.id.report_header);
 		t.setText("Report on existing roadwork");
 		
@@ -162,12 +164,15 @@ public class ReportActivity extends Activity {
 		Spinner s = (Spinner)findViewById(R.id.SpinnerReportSubject);			
         ArrayList<String> listOfRoadworks = new ArrayList<String>();
         
+        Log.d("tin", "rw");
+        roadworkIndexes.clear();	// clear before adding new
         for(int i = 0; i<MarkerList.getInstance().getList().size(); i++){
 			if(MarkerList.getInstance().getList().get(i).getType().equals("roadwork")){
-				listOfRoadworks.add( MarkerList.getInstance().getList().get(i).getId());
+				listOfRoadworks.add(MarkerList.getInstance().getList().get(i).getName());
+				roadworkIndexes.add(i);
 			}
 		}
-	
+        Log.d("tin", "edone");
         ArrayAdapter<String> adp = new ArrayAdapter<String> (this,android.R.layout.simple_spinner_dropdown_item,listOfRoadworks);
         s.setAdapter(adp);
         s.setVisibility(View.VISIBLE);
@@ -217,9 +222,12 @@ public class ReportActivity extends Activity {
 				roadworkSpinner = (Spinner) findViewById(R.id.SpinnerReportSubject);
 				descriptionField = (EditText) findViewById(R.id.EditTextReportBody);
 	            
+				int index = roadworkIndexes.get(roadworkSpinner.getSelectedItemPosition());
+				
 	            params1.add(new BasicNameValuePair("name", nameField.getText().toString()));
 	            params1.add(new BasicNameValuePair("email",  emailField.getText().toString()));
-	            params1.add(new BasicNameValuePair("roadworkID",  roadworkSpinner.getSelectedItem().toString()));
+	            //params1.add(new BasicNameValuePair("roadworkID",  roadworkSpinner.getSelectedItem().toString()));
+	            params1.add(new BasicNameValuePair("roadworkID", MarkerList.getInstance().getList().get(index).getId()));
 	            params1.add(new BasicNameValuePair("desc",  descriptionField.getText().toString()));
 	
 	            JSONObject json = jsonParser.makeHttpRequest(url_roadwork_report,"POST", params1);

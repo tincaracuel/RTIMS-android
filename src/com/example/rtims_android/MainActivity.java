@@ -45,8 +45,9 @@ public class MainActivity extends FragmentActivity {
 	private Button mLayersButton;
 	final Context context = this;
 	private String jsonResult, jsonResult2;
-	private String url = "http://10.0.246.255/RTIMS/roadwork.php";
-	private String url2 = "http://10.0.246.255/RTIMS/incident.php";
+	public static String ipadd = "http://192.168.0.100/" ;
+	private String url = ipadd + "RTIMS/roadwork.php";
+	private String url2 = ipadd + "RTIMS/incident.php";
 	//private String url = "http://sample1206.comeze.com/roadwork.php";
 	//private String url2 = "http://sample1206.comeze.com/incident.php";
 	private GoogleMap map;
@@ -55,7 +56,7 @@ public class MainActivity extends FragmentActivity {
 	private MarkerList mMarkerList; 
 	
 	private final int MAX_ROADWORK_ITEM = 10;
-	private final int MAX_INCIDENT_ITEM = 7;
+	private final int MAX_INCIDENT_ITEM = 6;
 	
 	boolean[] itemsChecked_rw, itemsChecked_inc;
 	
@@ -64,7 +65,7 @@ public class MainActivity extends FragmentActivity {
 	
 	final CharSequence[] categ_rw={"construction", "rehabilitation", "renovation", "riprapping", "application", "installation", "reconstruction", "concreting", "electrification", "roadway lighting"};
 	
-	final CharSequence[] categ_inc={"accident", "obstruction", "public event", "riprapping", "funeral", "flood", "strike"};
+	final CharSequence[] categ_inc={"accident", "obstruction", "public event", "funeral", "flood", "strike"};
 	
 	final CharSequence[] items_rw={"Construction",
 									"Rehabilitation",
@@ -80,7 +81,6 @@ public class MainActivity extends FragmentActivity {
 	final CharSequence[] items_inc={"Accident",
 									"Obstruction",
 									"Public Event",
-									"Riprapping",
 									"Funeral",
 									"Flood",
 									"Strike"};
@@ -104,6 +104,7 @@ public class MainActivity extends FragmentActivity {
         map = ((MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map)).getMap();
 
+        
         centerMap = new LatLng(14.1876, 121.12508);
 
         map.setMyLocationEnabled(true);
@@ -338,13 +339,6 @@ public class MainActivity extends FragmentActivity {
 		});
     	builder.show();
     }
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
 	
 	// Async Task to access the web
 		 private class JsonReadTask extends AsyncTask<String, Void, String> {
