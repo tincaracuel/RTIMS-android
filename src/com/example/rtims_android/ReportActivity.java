@@ -68,7 +68,8 @@ public class ReportActivity extends Activity {
 					descriptionField = (EditText) findViewById(R.id.EditTextReportBody);
 					String description = descriptionField.getText().toString();
 					
-					if(name.length() == 0)			nameField.setError("Name is required");
+					if(name.length() == 0){			nameField.setError("Name is required");	}
+					else if(name.length() < 3) {	nameField.setError("Name must have at least 3 characters.");	}
 					if(email.length() == 0)			emailField.setError("Email is required");
 					if(description.length() == 0) 	descriptionField.setError("Description is required");
 					
@@ -101,7 +102,8 @@ public class ReportActivity extends Activity {
 					descriptionField = (EditText) findViewById(R.id.EditTextReportBody);
 					String description = descriptionField.getText().toString();
 					
-					if(name.length() == 0)			nameField.setError("Name is required");
+					if(name.length() == 0){			nameField.setError("Name is required");	}
+					else if(name.length() < 3) {	nameField.setError("Name must have at least 3 characters.");	}
 					if(email.length() == 0)			emailField.setError("Email is required");
 					if(description.length() == 0) 	descriptionField.setError("Description is required");
 					
@@ -133,7 +135,8 @@ public class ReportActivity extends Activity {
 					descriptionField = (EditText) findViewById(R.id.EditTextReportBody);
 					String description = descriptionField.getText().toString();
 										
-					if(name.length() == 0)			nameField.setError("Name is required");
+					if(name.length() == 0){			nameField.setError("Name is required");	}
+					else if(name.length() < 3) {	nameField.setError("Name must have at least 3 characters.");	}
 					if(email.length() == 0)			emailField.setError("Email is required");
 					if(subject.length() == 0)		subjectField.setError("Report subject is required");
 					if(description.length() == 0) 	descriptionField.setError("Description is required");
@@ -156,7 +159,6 @@ public class ReportActivity extends Activity {
 	
 	private void openReportRoadworkLayout(){
 
-		Log.d("tin", "asafwfwefw");
 		TextView t = (TextView)findViewById(R.id.report_header);
 		t.setText("Report on existing roadwork");
 		
@@ -164,7 +166,6 @@ public class ReportActivity extends Activity {
 		Spinner s = (Spinner)findViewById(R.id.SpinnerReportSubject);			
         ArrayList<String> listOfRoadworks = new ArrayList<String>();
         
-        Log.d("tin", "rw");
         roadworkIndexes.clear();	// clear before adding new
         for(int i = 0; i<MarkerList.getInstance().getList().size(); i++){
 			if(MarkerList.getInstance().getList().get(i).getType().equals("roadwork")){
@@ -172,7 +173,7 @@ public class ReportActivity extends Activity {
 				roadworkIndexes.add(i);
 			}
 		}
-        Log.d("tin", "edone");
+
         ArrayAdapter<String> adp = new ArrayAdapter<String> (this,android.R.layout.simple_spinner_dropdown_item,listOfRoadworks);
         s.setAdapter(adp);
         s.setVisibility(View.VISIBLE);

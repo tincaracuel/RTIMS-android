@@ -212,7 +212,8 @@ containing a value of this type.
         public static final int EditTextReportBody=0x7f05000c;
         public static final int ScrollView01=0x7f050007;
         public static final int SpinnerReportSubject=0x7f05000b;
-        public static final int action_settings=0x7f050026;
+        public static final int action_refresh=0x7f050026;
+        public static final int action_settings=0x7f050027;
         public static final int dialogButtonOK=0x7f05001a;
         public static final int dtl_inc_address=0x7f050017;
         public static final int dtl_inc_categ=0x7f05000f;

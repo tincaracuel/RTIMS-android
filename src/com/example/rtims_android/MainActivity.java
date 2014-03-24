@@ -15,7 +15,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +28,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -45,7 +48,7 @@ public class MainActivity extends FragmentActivity {
 	private Button mLayersButton;
 	final Context context = this;
 	private String jsonResult, jsonResult2;
-	public static String ipadd = "http://192.168.0.100/" ;
+	public static String ipadd = "http://192.168.1.106/" ;
 	private String url = ipadd + "RTIMS/roadwork.php";
 	private String url2 = ipadd + "RTIMS/incident.php";
 	//private String url = "http://sample1206.comeze.com/roadwork.php";
@@ -86,17 +89,16 @@ public class MainActivity extends FragmentActivity {
 									"Strike"};
 	
 	
+	private ProgressDialog progress;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		if(isNetworkAvailable()){
-			accessWebService();
-		}else{
-			Toast.makeText(this, "No Internet Connection. Please check your network settings", Toast.LENGTH_LONG).show();
-		}
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
 		
 		mMarkerList = MarkerList.getInstance();
 		
@@ -213,9 +215,39 @@ public class MainActivity extends FragmentActivity {
 			
 		}); //end setOnClickListener
 		
-		
+		LoadData();
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+	 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+	    case R.id.action_refresh:
+	    	LoadData();
+	    	break;
+	    default:
+	    	break;
+	    }
+	    return true;
+	}
+	
+	private void LoadData() {
+		mMarkerList.getList().clear();
+		if(isNetworkAvailable()){
+			progress = ProgressDialog.show(this, "Loading", "Getting Roadworks and Incidents", true);
+			accessWebService();
+			mLayersButton.setEnabled(true);
+		}else{
+			mLayersButton.setEnabled(false);
+			Toast.makeText(this, "No Internet Connection. Please check your network settings", Toast.LENGTH_LONG).show();
+		}
+	}
+	
 	// find marker clicked from marker list
 	private void findMarkerClicked(Marker marker) {
 		Log.d("Tin", "findMarkerClicked");
@@ -341,64 +373,69 @@ public class MainActivity extends FragmentActivity {
     }
 	
 	// Async Task to access the web
-		 private class JsonReadTask extends AsyncTask<String, Void, String> {
-		  @Override
-		  protected String doInBackground(String... params) {
-			   HttpClient httpclient = new DefaultHttpClient();
-			   HttpPost httppostRoadwork = new HttpPost(params[0]);
-			   HttpPost httppostIncident = new HttpPost(params[1]);
-			   try {
-			    HttpResponse response = httpclient.execute(httppostRoadwork);
-			    jsonResult = inputStreamToString(
-			      response.getEntity().getContent()).toString();
-			    
-			    HttpResponse response2 = httpclient.execute(httppostIncident);
-			    jsonResult2 = inputStreamToString(
-			      response2.getEntity().getContent()).toString();
-			   }
+	private class JsonReadTask extends AsyncTask<String, Void, String> {
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpPost httppostRoadwork = new HttpPost(params[0]);
+				HttpPost httppostIncident = new HttpPost(params[1]);
+				
+				HttpResponse response = httpclient.execute(httppostRoadwork);
+				jsonResult = inputStreamToString(
+				response.getEntity().getContent()).toString();
+				    
+				HttpResponse response2 = httpclient.execute(httppostIncident);
+				jsonResult2 = inputStreamToString(
+				response2.getEntity().getContent()).toString();
+			} 
+			catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+		 
+		private StringBuilder inputStreamToString(InputStream is) {
+			String rLine = "";
+			StringBuilder answer = new StringBuilder();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is));
 			 
-			   catch (ClientProtocolException e) {
-			    e.printStackTrace();
-			   } catch (IOException e) {
-			    e.printStackTrace();
-			   }
-			   return null;
-			  }
+			try {
+				while ((rLine = rd.readLine()) != null) {
+					answer.append(rLine);
+					//System.out.println(rLine);
+				}
+			}
+			catch (IOException e) {
+				// e.printStackTrace();
+				Toast.makeText(getApplicationContext(),
+								"Error..." + e.toString(), Toast.LENGTH_LONG).show();
+			}
+			
+			return answer;
+		}
 		 
-		  private StringBuilder inputStreamToString(InputStream is) {
-		   String rLine = "";
-		   StringBuilder answer = new StringBuilder();
-		   BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+		@Override
+		protected void onPostExecute(String result) {
+			progress.dismiss();
+			ListDrwaer();
+		}
+	}// end async task
 		 
-		   try {
-		    while ((rLine = rd.readLine()) != null) {
-		     answer.append(rLine);
-		     //System.out.println(rLine);
-		    }
-		   }
-		 
-		   catch (IOException e) {
-		    // e.printStackTrace();
-		    Toast.makeText(getApplicationContext(),
-		      "Error..." + e.toString(), Toast.LENGTH_LONG).show();
-		   }
-		   return answer;
-		  }
-		 
-		  @Override
-		  protected void onPostExecute(String result) {
-		   ListDrwaer();
-		  }
-		 }// end async task
-		 
-		 public void accessWebService() {
-		  JsonReadTask task = new JsonReadTask();
-		  // passes values for the urls string array
-		  task.execute(new String[] { url, url2 });
-		 }
+	public void accessWebService() {
+		JsonReadTask task = new JsonReadTask();
+		// passes values for the urls string array
+		task.execute(new String[] { url, url2 });
+	}
 		 
 		 // build hash set for list view
-		 public void ListDrwaer() {
+	public void ListDrwaer() {
 		  try {
 			//incidents
 			JSONObject jsonResponse = new JSONObject(jsonResult2);
