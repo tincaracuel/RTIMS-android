@@ -457,10 +457,16 @@ public class MainActivity extends FragmentActivity {
 	
 		  } catch (JSONException e) {
 			  Toast.makeText(getApplicationContext(), "Error" + e.toString(),
-				Toast.LENGTH_SHORT).show();
-			  Log.d("JSON", e.toString());
-		  }
+						Toast.LENGTH_SHORT).show();
+					  Log.d("JSON", e.toString());
+			} catch (Exception e) {
+					  Toast.makeText(getApplicationContext(), "Error" + e.toString(),
+								Toast.LENGTH_SHORT).show();
+							  Log.d("JSON", e.toString());
+				}
+
 		 }
+	
 		 
 		 private void createINCMarker(JSONObject jsonChildNode){
 			 RTIMSMarker iMarker; 
