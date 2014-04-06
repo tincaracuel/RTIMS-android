@@ -205,34 +205,35 @@ containing a value of this type.
         public static final int warning=0x7f02002f;
     }
     public static final class id {
-        public static final int ButtonSendReport=0x7f05000d;
-        public static final int EditSubject=0x7f05001b;
-        public static final int EditTextEmail=0x7f05000a;
+        public static final int ButtonSendReport=0x7f05000e;
+        public static final int EditContactNo=0x7f05000a;
+        public static final int EditSubject=0x7f05001c;
+        public static final int EditTextEmail=0x7f05000b;
         public static final int EditTextName=0x7f050009;
-        public static final int EditTextReportBody=0x7f05000c;
+        public static final int EditTextReportBody=0x7f05000d;
         public static final int ScrollView01=0x7f050007;
-        public static final int SpinnerReportSubject=0x7f05000b;
-        public static final int action_refresh=0x7f050026;
-        public static final int action_settings=0x7f050027;
-        public static final int dialogButtonOK=0x7f05001a;
-        public static final int dtl_inc_address=0x7f050017;
-        public static final int dtl_inc_categ=0x7f05000f;
-        public static final int dtl_inc_coord=0x7f050016;
-        public static final int dtl_inc_desc=0x7f050012;
-        public static final int dtl_inc_duration=0x7f050014;
-        public static final int dtl_inc_image=0x7f05000e;
-        public static final int dtl_inc_no=0x7f050011;
-        public static final int dtl_rw_address=0x7f050025;
-        public static final int dtl_rw_categ=0x7f050020;
-        public static final int dtl_rw_contract_no=0x7f05001e;
-        public static final int dtl_rw_coord=0x7f050024;
-        public static final int dtl_rw_desc=0x7f050021;
-        public static final int dtl_rw_duration=0x7f050022;
-        public static final int dtl_rw_image=0x7f05001c;
-        public static final int dtl_rw_name=0x7f05001d;
-        public static final int dtl_rw_stat=0x7f050023;
+        public static final int SpinnerReportSubject=0x7f05000c;
+        public static final int action_refresh=0x7f050027;
+        public static final int action_settings=0x7f050028;
+        public static final int dialogButtonOK=0x7f05001b;
+        public static final int dtl_inc_address=0x7f050018;
+        public static final int dtl_inc_categ=0x7f050010;
+        public static final int dtl_inc_coord=0x7f050017;
+        public static final int dtl_inc_desc=0x7f050013;
+        public static final int dtl_inc_duration=0x7f050015;
+        public static final int dtl_inc_image=0x7f05000f;
+        public static final int dtl_inc_no=0x7f050012;
+        public static final int dtl_rw_address=0x7f050026;
+        public static final int dtl_rw_categ=0x7f050021;
+        public static final int dtl_rw_contract_no=0x7f05001f;
+        public static final int dtl_rw_coord=0x7f050025;
+        public static final int dtl_rw_desc=0x7f050022;
+        public static final int dtl_rw_duration=0x7f050023;
+        public static final int dtl_rw_image=0x7f05001d;
+        public static final int dtl_rw_name=0x7f05001e;
+        public static final int dtl_rw_stat=0x7f050024;
         public static final int hybrid=0x7f050004;
-        public static final int image=0x7f050019;
+        public static final int image=0x7f05001a;
         public static final int layers_button=0x7f050006;
         public static final int map=0x7f050005;
         public static final int none=0x7f050000;
@@ -240,11 +241,11 @@ containing a value of this type.
         public static final int report_header=0x7f050008;
         public static final int satellite=0x7f050002;
         public static final int terrain=0x7f050003;
-        public static final int text=0x7f050018;
-        public static final int textView2=0x7f050010;
-        public static final int textView3=0x7f050015;
-        public static final int textView4=0x7f05001f;
-        public static final int textView5=0x7f050013;
+        public static final int text=0x7f050019;
+        public static final int textView2=0x7f050011;
+        public static final int textView3=0x7f050016;
+        public static final int textView4=0x7f050020;
+        public static final int textView5=0x7f050014;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -353,15 +354,16 @@ containing a value of this type.
          */
         public static final int common_signin_button_text_long=0x7f060012;
         public static final int hello_world=0x7f06001b;
-        public static final int hintbodyandlocation=0x7f060023;
-        public static final int hintemail=0x7f06001f;
+        public static final int hintbodyandlocation=0x7f060024;
+        public static final int hintemail=0x7f060020;
         public static final int hintname=0x7f06001e;
-        public static final int hintreportbody=0x7f060022;
+        public static final int hintnumber=0x7f06001f;
+        public static final int hintreportbody=0x7f060023;
         public static final int layers_button=0x7f06001c;
         public static final int reportheader=0x7f06001d;
-        public static final int reportprompt=0x7f060020;
-        public static final int reportsubject=0x7f060021;
-        public static final int submitbutton=0x7f060024;
+        public static final int reportprompt=0x7f060021;
+        public static final int reportsubject=0x7f060022;
+        public static final int submitbutton=0x7f060025;
     }
     public static final class style {
         /** 

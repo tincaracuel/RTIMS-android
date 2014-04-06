@@ -38,6 +38,15 @@
 	</EditText>
 	
     <EditText
+	    android:id="@+id/EditContactNo"
+	    android:layout_height="wrap_content"
+	    android:paddingTop="14sp"
+	    android:hint="@string/hintnumber"
+	    android:inputType="text"
+	    android:layout_width="fill_parent">
+	</EditText>
+	
+    <EditText
 	    android:id="@+id/EditTextEmail"
 	    android:layout_height="wrap_content"
 	    android:paddingTop="14sp"

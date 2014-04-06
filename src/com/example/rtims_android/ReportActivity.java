@@ -31,7 +31,7 @@ public class ReportActivity extends Activity {
 	private static String url_other_report = MainActivity.ipadd + "RTIMS/insert_other_report.php";
 	private Button mSubmitButton;
 	private ProgressDialog pDialog;
-	private EditText nameField, emailField, descriptionField, subjectField;
+	private EditText nameField, emailField, descriptionField, subjectField, contactField;
 	private Spinner roadworkSpinner, incidentSpinner;
 	JSONParser jsonParser = new JSONParser();
 	private int opt;
@@ -59,6 +59,9 @@ public class ReportActivity extends Activity {
 					nameField = (EditText) findViewById(R.id.EditTextName);
 					String name = nameField.getText().toString();
 					
+					contactField = (EditText) findViewById(R.id.EditContactNo);
+					String contactno = contactField.getText().toString();
+					
 					emailField = (EditText) findViewById(R.id.EditTextEmail);
 					String email = emailField.getText().toString();
 
@@ -70,10 +73,10 @@ public class ReportActivity extends Activity {
 					
 					if(name.length() == 0){			nameField.setError("Name is required");	}
 					else if(name.length() < 3) {	nameField.setError("Name must have at least 3 characters.");	}
-					if(email.length() == 0)			emailField.setError("Email is required");
+					if(contactno.length() == 0)		contactField.setError("Contact number is required");
 					if(description.length() == 0) 	descriptionField.setError("Description is required");
 					
-					if(name.length() != 0 && email.length() != 0 && roadworkID.length() != 0 && description.length() != 0){
+					if(name.length() != 0 && contactno.length() != 0 && roadworkID.length() != 0 && description.length() != 0){
 						//Log.d("TIN", name + ", " + email + ", " + roadworkID + ", " + description);
 						new addReportToDB().execute();
 					}
@@ -92,6 +95,9 @@ public class ReportActivity extends Activity {
 				public void onClick(View v) {
 					nameField = (EditText) findViewById(R.id.EditTextName);
 					String name = nameField.getText().toString();
+					
+					contactField = (EditText) findViewById(R.id.EditContactNo);
+					String contactno = contactField.getText().toString();
 
 					emailField = (EditText) findViewById(R.id.EditTextEmail);
 					String email = emailField.getText().toString();
@@ -104,10 +110,10 @@ public class ReportActivity extends Activity {
 					
 					if(name.length() == 0){			nameField.setError("Name is required");	}
 					else if(name.length() < 3) {	nameField.setError("Name must have at least 3 characters.");	}
-					if(email.length() == 0)			emailField.setError("Email is required");
+					if(contactno.length() == 0)		contactField.setError("Contact number is required");
 					if(description.length() == 0) 	descriptionField.setError("Description is required");
 					
-					if(name.length() != 0 && email.length() != 0 && incidentID.length() != 0 && description.length() != 0){
+					if(name.length() != 0 && contactno.length() != 0 && incidentID.length() != 0 && description.length() != 0){
 						//Log.d("TIN", name + ", " + email + ", " + incidentID + ", " + description);
 						new addReportToDB().execute();
 					}
@@ -125,6 +131,9 @@ public class ReportActivity extends Activity {
 				public void onClick(View v) {
 					nameField = (EditText) findViewById(R.id.EditTextName);
 					String name = nameField.getText().toString();
+					
+					contactField = (EditText) findViewById(R.id.EditContactNo);
+					String contactno = contactField.getText().toString();
 
 					emailField = (EditText) findViewById(R.id.EditTextEmail);
 					String email = emailField.getText().toString();
@@ -137,11 +146,11 @@ public class ReportActivity extends Activity {
 										
 					if(name.length() == 0){			nameField.setError("Name is required");	}
 					else if(name.length() < 3) {	nameField.setError("Name must have at least 3 characters.");	}
-					if(email.length() == 0)			emailField.setError("Email is required");
+					if(contactno.length() == 0)		contactField.setError("Contact number is required");
 					if(subject.length() == 0)		subjectField.setError("Report subject is required");
 					if(description.length() == 0) 	descriptionField.setError("Description is required");
 										
-					if(name.length() != 0 && email.length() != 0 && subject.length() != 0 && description.length() != 0){
+					if(name.length() != 0 && contactno.length() != 0 && subject.length() != 0 && description.length() != 0){
 						//Log.d("TIN", name + ", " + email + ", " + subject + ", " + description);
 						new addReportToDB().execute();
 					}
@@ -219,6 +228,7 @@ public class ReportActivity extends Activity {
             	
 	            List<NameValuePair> params1 = new ArrayList<NameValuePair>();
 	            nameField = (EditText) findViewById(R.id.EditTextName);
+	            contactField = (EditText) findViewById(R.id.EditContactNo);
 				emailField = (EditText) findViewById(R.id.EditTextEmail);
 				roadworkSpinner = (Spinner) findViewById(R.id.SpinnerReportSubject);
 				descriptionField = (EditText) findViewById(R.id.EditTextReportBody);
@@ -226,6 +236,7 @@ public class ReportActivity extends Activity {
 				int index = roadworkIndexes.get(roadworkSpinner.getSelectedItemPosition());
 				
 	            params1.add(new BasicNameValuePair("name", nameField.getText().toString()));
+	            params1.add(new BasicNameValuePair("contactno",  contactField.getText().toString()));
 	            params1.add(new BasicNameValuePair("email",  emailField.getText().toString()));
 	            //params1.add(new BasicNameValuePair("roadworkID",  roadworkSpinner.getSelectedItem().toString()));
 	            params1.add(new BasicNameValuePair("roadworkID", MarkerList.getInstance().getList().get(index).getId()));
@@ -240,11 +251,13 @@ public class ReportActivity extends Activity {
 	            List<NameValuePair> params2 = new ArrayList<NameValuePair>();
 	            
 	            nameField = (EditText) findViewById(R.id.EditTextName);
+	            contactField = (EditText) findViewById(R.id.EditContactNo);
 				emailField = (EditText) findViewById(R.id.EditTextEmail);
 				incidentSpinner = (Spinner) findViewById(R.id.SpinnerReportSubject);
 				descriptionField = (EditText) findViewById(R.id.EditTextReportBody);
 				
 	            params2.add(new BasicNameValuePair("name", nameField.getText().toString()));
+	            params2.add(new BasicNameValuePair("contactno",  contactField.getText().toString()));
 	            params2.add(new BasicNameValuePair("email",  emailField.getText().toString()));
 	            params2.add(new BasicNameValuePair("incidentID",  incidentSpinner.getSelectedItem().toString()));
 	            params2.add(new BasicNameValuePair("desc",  descriptionField.getText().toString()));
@@ -258,11 +271,13 @@ public class ReportActivity extends Activity {
 	            List<NameValuePair> params3 = new ArrayList<NameValuePair>();
 	            
 	            nameField = (EditText) findViewById(R.id.EditTextName);
+	            contactField = (EditText) findViewById(R.id.EditContactNo);
 				emailField = (EditText) findViewById(R.id.EditTextEmail);
 				subjectField = (EditText) findViewById(R.id.EditSubject);
 				descriptionField = (EditText) findViewById(R.id.EditTextReportBody);
 				
 	            params3.add(new BasicNameValuePair("name", nameField.getText().toString()));
+	            params3.add(new BasicNameValuePair("contactno",  contactField.getText().toString()));
 	            params3.add(new BasicNameValuePair("email",  emailField.getText().toString()));
 	            params3.add(new BasicNameValuePair("subject",  subjectField.getText().toString()));
 	            params3.add(new BasicNameValuePair("desc",  descriptionField.getText().toString()));

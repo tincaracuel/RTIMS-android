@@ -8,6 +8,7 @@
     
     <string name="reportheader">Submit new report</string>
     <string name="hintname">Name</string>
+    <string name="hintnumber">Contact number (09xxxxxxxxx)</string>
     <string name="hintemail">Email Address</string>
     <string name="reportprompt">Report on…</string>
     <string name="reportsubject">Report subject</string>

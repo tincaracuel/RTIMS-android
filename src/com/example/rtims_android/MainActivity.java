@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity {
 	private Button mLayersButton;
 	final Context context = this;
 	private String jsonResult, jsonResult2;
-	public static String ipadd = "http://192.168.1.106/" ;
+	public static String ipadd = "http://192.168.0.101/" ;
 	private String url = ipadd + "RTIMS/roadwork.php";
 	private String url2 = ipadd + "RTIMS/incident.php";
 	//private String url = "http://sample1206.comeze.com/roadwork.php";
